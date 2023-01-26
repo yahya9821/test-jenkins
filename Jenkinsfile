@@ -1,12 +1,36 @@
 pipeline {
-  agent any
-  stages {
-    stage('Test') {
-      steps {
-        sh '''npm install -g @angular/cli
-ng new test-ci'''
-      }
+    agent {
+        node {
+            label 'node'
+        }
     }
-
-  }
+    environment {
+        PATH = "${tool 'node'}/bin:${env.PATH}"
+    }
+    stages {
+        stage('Initialization') {
+            steps {
+                sh 'npm install -g @angular/cli'
+                sh 'ng new test-ci'
+            }
+        }
+        stage('Build') {
+            steps {
+                sh 'cd test-ci'
+                sh 'ng build --prod'
+            }
+        }
+        stage('Test') {
+            steps {
+                sh 'cd test-ci'
+                sh 'ng test'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                sh 'cd test-ci'
+                sh 'ng deploy --prod'
+            }
+        }
+    }
 }
