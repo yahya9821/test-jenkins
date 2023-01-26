@@ -3,7 +3,8 @@ pipeline {
   stages {
     stage('Test') {
       steps {
-        sh 'ng test --watch'
+        sh '''npm install
+ng test --watch'''
       }
     }
 
