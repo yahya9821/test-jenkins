@@ -3,21 +3,8 @@ pipeline {
   stages {
     stage('Test') {
       steps {
-        sh '''npm install
-ng test --watch'''
-      }
-    }
-
-    stage('Build') {
-      steps {
-        sh '''npm install
-ng build'''
-      }
-    }
-
-    stage('Deploy') {
-      steps {
-        sh 'echo "hello world"'
+        sh '''npm install -g @angular/cli
+ng new test-ci'''
       }
     }
 
