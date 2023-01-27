@@ -1,15 +1,38 @@
-
 pipeline {
-    agent {
-        label 'maitre'
+  agent {
+      label 'maitre'
+  }
+  stages {
+    stage('Initialization') {
+      steps {
+        sh 'npm install -g @angular/cli'
+        sh 'ng new test-ci'
+      }
     }
-    stages {
-        stage('Build') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'GIT_CREDS', yahya9821: 'USERNAME', podolski98672009: 'PASSWORD')]) {
-                    sh "git clone https://${USERNAME}:${PASSWORD}@github.com/yahya9821/test-jenkins.git"
-                }
-            }
-        }
+
+    stage('Build') {
+      steps {
+        sh 'cd test-ci'
+        sh 'ng build --prod'
+      }
     }
+
+    stage('Test') {
+      steps {
+        sh 'cd test-ci'
+        sh 'ng test'
+      }
+    }
+
+    stage('Deploy') {
+      steps {
+        sh 'cd test-ci'
+        sh 'ng deploy --prod'
+      }
+    }
+
+  }
+  environment {
+    PATH = "${tool 'node'}/bin:${env.PATH}"
+  }
 }
